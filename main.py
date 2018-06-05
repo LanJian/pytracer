@@ -29,6 +29,7 @@ print(v1 * 10)
 print(abs(Vector(3, 4, 0)))
 print(v2.normalize())
 print(abs(v2.normalize()))
+print(Vector.J.cross(Vector.K))
 
 # testing point stuff
 p1 = Point(1, 2, 3)

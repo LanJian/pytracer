@@ -29,7 +29,13 @@ class Vector:
         return math.sqrt(sum([e * e for e in self.elements]))
 
     def cross(self, other):
-        pass
+        u = self
+        v = other
+        return Vector(
+            u[1]*v[2] - u[2]*v[1],
+            u[2]*v[0] - u[0]*v[2],
+            u[0]*v[1] - u[1]*v[0]
+        )
 
     def normalize(self):
         mag = abs(self)
@@ -37,3 +43,8 @@ class Vector:
 
     def __str__(self):
         return f'V{self.elements}'
+
+Vector.ZERO = Vector(0, 0, 0)
+Vector.I = Vector(1, 0, 0)
+Vector.J = Vector(0, 1, 0)
+Vector.K = Vector(0, 0, 1)
