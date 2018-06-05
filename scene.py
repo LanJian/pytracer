@@ -16,11 +16,11 @@ class Scene:
     def raytrace(self):
         rays = []
         d = (self.width / 2) / math.tan(math.radians(self.fov / 2))
-        for i in self.width:
-            for j in self.height:
+        for u in range(self.width):
+            for v in range(self.height):
                 vector = (self.camera.view * d
-                          + self.camera.side * (self.width / 2 - i)
-                          + self.camera.up * (self.height / 2 - j))
+                          + self.camera.side * (u - (self.width - 1) / 2)
+                          + self.camera.up * ((self.height - 1) / 2 - v))
                 ray = Ray(self.camera.position, vector)
                 print(ray)
                 rays.append(ray)

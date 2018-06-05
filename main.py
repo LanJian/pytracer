@@ -2,6 +2,8 @@ from PIL import Image
 
 from vector import Vector
 from point import Point
+from camera import Camera
+from scene import Scene
 
 # PIL accesses images in Cartesian co-ordinates, so it is Image[columns, rows]
 img = Image.new( 'RGB', (255,255), "black") # create a new black image
@@ -12,6 +14,10 @@ for i in range(img.size[0]):    # for every col:
         pixels[i,j] = (i, j, 0) # set the colour accordingly
 
 img.save('output.png')
+
+camera = Camera(Point.ORIGIN, Vector.J, Vector.K)
+scene = Scene(camera, 3, 3, 45)
+scene.raytrace()
 
 # testing vector stuff
 v1 = Vector(2, 0, 0)

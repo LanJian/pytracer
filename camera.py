@@ -1,6 +1,6 @@
 class Camera:
-    def __init__(self, up, view, fov):
+    def __init__(self, position, up, view):
+        self.position = position
         self.up = up
         self.view = view
-        self.fov = fov
         self.side = up.cross(view)

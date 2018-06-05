@@ -24,3 +24,5 @@ class Point:
 
     def __str__(self):
         return f'P{self.elements}'
+
+Point.ORIGIN = Point(0, 0, 0)
