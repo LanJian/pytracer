@@ -6,14 +6,22 @@ class Sphere:
     # alias attributes
     @property
     def c(self):
-        self.center
+        return self.center
 
     @property
     def r(self):
-        self.radius
+        return self.radius
 
     def intersection(self, ray):
-        pass
+        o = ray.p
+        l = ray.d
+        c = self.c
+        r = self.r
+
+        term = (l * (o - c))**2 - abs(o - c)**2 + r**2
+        if term < 0:
+            return False
+        return True
 
     def normal(self, point):
         pass

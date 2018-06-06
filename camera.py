@@ -4,3 +4,7 @@ class Camera:
         self.up = up
         self.view = view
         self.side = up.cross(view)
+
+    @property
+    def p(self):
+        return self.position

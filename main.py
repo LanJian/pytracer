@@ -16,8 +16,11 @@ for i in range(img.size[0]):    # for every col:
 img.save('output.png')
 
 camera = Camera(Point.ORIGIN, Vector.J, Vector.K)
-scene = Scene(camera, 3, 3, 45)
+scene = Scene(camera, 200, 200, 45)
 scene.raytrace()
+
+sphere = Sphere(Point(0, 0, 5), 5)
+ray = Ray(camera.p, Vector.K)
 
 # testing vector stuff
 v1 = Vector(2, 0, 0)
