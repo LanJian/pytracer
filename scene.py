@@ -4,18 +4,19 @@ from ray import Ray
 
 
 class Scene:
-    def __init__(self, camera, width, height, fov):
+    def __init__(self, camera, width, height, fov, background):
         self.objects = []
         self.camera = camera
         self.width = width
         self.height = height
         self.fov = fov
+        self.background = background
 
     def add(self, object):
         self.objects.append(object)
 
     def raytrace(self):
-        pixels = [[(255, 255, 255) for u in range(self.width)]
+        pixels = [[self.background for u in range(self.width)]
                   for v in range(self.height)]
         d = (self.width / 2) / math.tan(math.radians(self.fov / 2))
         for u in range(self.width):
@@ -25,7 +26,13 @@ class Scene:
                           + self.camera.up * ((self.height - 1) / 2 - v))
                 ray = Ray(self.camera.position, vector.normalize())
                 for obj in self.objects:
-                    if obj.intersection(ray):
-                        pixels[v][u] = (0, 0, 0)
+                    intersection = obj.intersection(ray)
+                    if intersection is not None:
+                        t = intersection['t']
+                        pixels[v][u] = (
+                            255 - int((t-18)*255/2),
+                            255 - int((t-18)*255/2),
+                            255 - int((t-18)*255/2)
+                        )
 
         return pixels

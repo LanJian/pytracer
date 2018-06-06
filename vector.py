@@ -24,6 +24,9 @@ class Vector:
         else:
             return sum([a * b for a, b in zip(self.elements, other.elements)])
 
+    def __rmul__(self, other):
+        return self * other
+
     # magnitude
     def __abs__(self):
         return math.sqrt(sum([e * e for e in self.elements]))

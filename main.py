@@ -7,7 +7,7 @@ from scene import Scene
 from sphere import Sphere
 
 camera = Camera(Point.ORIGIN, Vector.J, Vector.K)
-scene = Scene(camera, 300, 200, 45)
+scene = Scene(camera, 300, 200, 45, (200, 200, 200))
 
 sphere = Sphere(Point(2, 2, 20), 2)
 
@@ -15,7 +15,7 @@ scene.add(sphere)
 
 result = scene.raytrace()
 
-img = Image.new('RGB', (scene.width, scene.height), "white")
+img = Image.new('RGB', (scene.width, scene.height), scene.background)
 pixels = img.load()
 
 for u in range(img.size[0]):
