@@ -15,7 +15,7 @@ class Scene:
     def add(self, object):
         self.objects.append(object)
 
-    def raytrace(self):
+    def render(self):
         pixels = [[self.background for u in range(self.width)]
                   for v in range(self.height)]
         d = (self.width / 2) / math.tan(math.radians(self.fov / 2))

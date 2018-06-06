@@ -13,7 +13,7 @@ sphere = Sphere(Point(2, 2, 20), 2)
 
 scene.add(sphere)
 
-result = scene.raytrace()
+result = scene.render()
 
 img = Image.new('RGB', (scene.width, scene.height), scene.background)
 pixels = img.load()
