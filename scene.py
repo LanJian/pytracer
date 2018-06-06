@@ -1,6 +1,7 @@
 import math
 
 from ray import Ray
+from color import Color
 
 
 class Scene:
@@ -29,7 +30,7 @@ class Scene:
                     intersection = obj.intersection(ray)
                     if intersection is not None:
                         t = intersection['t']
-                        pixels[v][u] = (
+                        pixels[v][u] = Color(
                             255 - int((t-18)*255/2),
                             255 - int((t-18)*255/2),
                             255 - int((t-18)*255/2)
