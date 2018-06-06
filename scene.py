@@ -2,6 +2,7 @@ import math
 
 from ray import Ray
 
+
 class Scene:
     def __init__(self, camera, width, height, fov):
         self.objects = []
@@ -14,11 +15,10 @@ class Scene:
         self.objects.append(object)
 
     def raytrace(self):
-        pixels = []
+        pixels = [[(255, 255, 255) for u in range(self.width)]
+                  for v in range(self.height)]
         d = (self.width / 2) / math.tan(math.radians(self.fov / 2))
         for u in range(self.width):
-            row = [None]*self.width
-            pixels.append(row)
             for v in range(self.height):
                 vector = (self.camera.view * d
                           + self.camera.side * (u - (self.width - 1) / 2)
@@ -26,8 +26,6 @@ class Scene:
                 ray = Ray(self.camera.position, vector.normalize())
                 for obj in self.objects:
                     if obj.intersection(ray):
-                        pixels[u][v] = (0, 0, 0)
-                    else:
-                        pixels[u][v] = (255, 255, 255)
+                        pixels[v][u] = (0, 0, 0)
 
         return pixels
