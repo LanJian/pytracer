@@ -6,11 +6,13 @@ from camera import Camera
 from scene import Scene
 from sphere import Sphere
 from color import Color
+from light import Light
 
 camera = Camera(Point.ORIGIN, Vector.J, Vector.K)
-scene = Scene(camera, 300, 200, 45, Color(200, 200, 200))
+scene = Scene(camera, 300, 200, 90, Color.BLACK)
+light = Light(Point(10, 50, 10), Color.WHITE, Color.WHITE, Color.WHITE)
 
-sphere = Sphere(Point(2, 2, 20), 2)
+sphere = Sphere(Point(0, 0, 10), 5)
 
 scene.add(sphere)
 

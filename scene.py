@@ -7,6 +7,7 @@ from color import Color
 class Scene:
     def __init__(self, camera, width, height, fov, background):
         self.objects = []
+        self.lights = []
         self.camera = camera
         self.width = width
         self.height = height
@@ -15,6 +16,9 @@ class Scene:
 
     def add(self, object):
         self.objects.append(object)
+
+    def add_light(self, light):
+        self.lights.appent(light)
 
     def render(self):
         pixels = [[self.background for u in range(self.width)]
@@ -31,6 +35,13 @@ class Scene:
                     if intersection is not None:
                         t = intersection['t']
                         normal = obj.normal(intersection['point'])
+
+                        mat = obj.material
+                        ka = mat.ambient
+                        kd = mat.diffuse
+                        ks = mat.specular
+                        a = mat.shinines
+
                         pixels[v][u] = Color(
                             int((normal.x + 1) * 255 / 2),
                             int((normal.y + 1) * 255 / 2),

@@ -2,9 +2,10 @@ import math
 
 
 class Sphere:
-    def __init__(self, center, radius):
+    def __init__(self, center, radius, material):
         self.center = center
         self.radius = radius
+        self.material = material
 
     # alias attributes
     @property
