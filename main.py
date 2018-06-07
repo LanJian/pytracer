@@ -7,14 +7,17 @@ from scene import Scene
 from sphere import Sphere
 from color import Color
 from light import Light
+from phong import Phong
 
 camera = Camera(Point.ORIGIN, Vector.J, Vector.K)
 scene = Scene(camera, 300, 200, 90, Color.BLACK)
-light = Light(Point(10, 50, 10), Color.WHITE, Color.WHITE, Color.WHITE)
+light = Light(Point(10, 30, -5), Color.WHITE * 0.1, Color.WHITE, Color.WHITE)
 
-sphere = Sphere(Point(0, 0, 10), 5)
+material = Phong(Color.BLUE, Color.BLUE, Color.WHITE, 20)
+sphere = Sphere(Point(0, 0, 10), 5, material)
 
 scene.add(sphere)
+scene.add_light(light)
 
 result = scene.render()
 

@@ -27,6 +27,9 @@ class Vector:
     def __rmul__(self, other):
         return self * other
 
+    def __neg__(self):
+        return Vector.ZERO - self
+
     # magnitude
     def __abs__(self):
         return math.sqrt(sum([e * e for e in self.elements]))

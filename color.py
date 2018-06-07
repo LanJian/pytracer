@@ -3,9 +3,9 @@ import numbers
 
 class Color:
     def __init__(self, r, g, b):
-        self.r = r
-        self.g = g
-        self.b = b
+        self.r = round(r)
+        self.g = round(g)
+        self.b = round(b)
         self.clamp()
 
     # make this class an iterable so we can convert to tuple
@@ -18,6 +18,9 @@ class Color:
             self.g + other.g,
             self.b + other.b
         )
+
+    def __iadd__(self, other):
+        return self + other
 
     def __mul__(self, other):
         if isinstance(other, numbers.Number):
@@ -32,6 +35,9 @@ class Color:
             self.g / 255 * other.g,
             self.b / 255 * other.b,
         )
+
+    def __str__(self):
+        return f'C{(self.r, self.g, self.b)}'
 
     def clamp(self):
         self.r = max([min([self.r, 255]), 0])

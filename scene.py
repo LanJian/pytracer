@@ -18,7 +18,7 @@ class Scene:
         self.objects.append(object)
 
     def add_light(self, light):
-        self.lights.appent(light)
+        self.lights.append(light)
 
     def render(self):
         pixels = [[self.background for u in range(self.width)]
@@ -31,21 +31,35 @@ class Scene:
                           + self.camera.up * ((self.height - 1) / 2 - v))
                 ray = Ray(self.camera.position, vector.normalize())
                 for obj in self.objects:
+                    # TODO: z sort and get closest intersection
                     intersection = obj.intersection(ray)
                     if intersection is not None:
+                        point = intersection['point']
                         t = intersection['t']
-                        normal = obj.normal(intersection['point'])
+                        n = obj.normal(point)
 
                         mat = obj.material
                         ka = mat.ambient
                         kd = mat.diffuse
                         ks = mat.specular
-                        a = mat.shinines
+                        a = mat.shininess
 
-                        pixels[v][u] = Color(
-                            int((normal.x + 1) * 255 / 2),
-                            int((normal.y + 1) * 255 / 2),
-                            int((normal.z + 1) * 255 / 2)
-                        )
+                        color = Color.BLACK
+
+                        for light in self.lights:
+                            la = light.ambient
+                            ld = light.diffuse
+                            ls = light.specular
+                            l = (light.position - point).normalize()
+                            r = (l * n) * 2 * n - l
+                            view = (-vector).normalize()
+
+                            color += ka * la
+                            if l * n > 0:
+                                color += kd * (l * n) * ld
+                            if r * view > 0:
+                                color += ks * (r * view)**a * ls
+
+                        pixels[v][u] = color
 
         return pixels
