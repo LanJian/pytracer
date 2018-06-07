@@ -10,14 +10,24 @@ from light import Light
 from phong import Phong
 
 camera = Camera(Point.ORIGIN, Vector.J, Vector.K)
-scene = Scene(camera, 300, 200, 90, Color.BLACK)
-light = Light(Point(10, 30, -5), Color.WHITE * 0.1, Color.WHITE, Color.WHITE)
+scene = Scene(camera, 600, 400, 90, Color.BLACK)
 
-material = Phong(Color.BLUE, Color.BLUE, Color.WHITE, 20)
-sphere = Sphere(Point(0, 0, 10), 5, material)
+lights = [
+    Light(Point(0, 100, 0), Color.WHITE * 0.1, Color.WHITE, Color.WHITE),
+    Light(Point(-100, 0, 0), Color.WHITE * 0.1, Color.RED, Color(255, 200, 200))
+]
 
-scene.add(sphere)
-scene.add_light(light)
+objects = [
+    Sphere(Point(0, 0, 15), 5,
+           Phong(Color(100, 100, 200), Color(100, 100, 200), Color.WHITE, 20)),
+    Sphere(Point(5, 5, 20), 5,
+           Phong(Color.ORANGE, Color.ORANGE, Color.WHITE, 20)),
+]
+
+for o in objects:
+    scene.add(o)
+for l in lights:
+    scene.add_light(l)
 
 result = scene.render()
 

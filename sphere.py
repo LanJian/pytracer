@@ -41,7 +41,7 @@ class Sphere:
         if d2 < 0:
             d = d1
 
-        return {'point': o + d * l, 't': d}
+        return {'point': o + d * l, 't': d, 'obj': self}
 
     def normal(self, point):
         return (point - self.c).normalize()

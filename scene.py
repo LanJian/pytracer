@@ -30,36 +30,58 @@ class Scene:
                           + self.camera.side * (u - (self.width - 1) / 2)
                           + self.camera.up * ((self.height - 1) / 2 - v))
                 ray = Ray(self.camera.position, vector.normalize())
-                for obj in self.objects:
-                    # TODO: z sort and get closest intersection
-                    intersection = obj.intersection(ray)
-                    if intersection is not None:
-                        point = intersection['point']
-                        t = intersection['t']
-                        n = obj.normal(point)
 
-                        mat = obj.material
-                        ka = mat.ambient
-                        kd = mat.diffuse
-                        ks = mat.specular
-                        a = mat.shininess
+                closest = self.closest_intersection(ray)
+                if not closest:
+                    pixels[v][u] = self.background
+                    continue
 
-                        color = Color.BLACK
+                obj = closest['obj']
+                point = closest['point']
+                n = obj.normal(point)
 
-                        for light in self.lights:
-                            la = light.ambient
-                            ld = light.diffuse
-                            ls = light.specular
-                            l = (light.position - point).normalize()
-                            r = (l * n) * 2 * n - l
-                            view = (-vector).normalize()
+                mat = obj.material
+                ka = mat.ambient
+                kd = mat.diffuse
+                ks = mat.specular
+                a = mat.shininess
 
-                            color += ka * la
-                            if l * n > 0:
-                                color += kd * (l * n) * ld
-                            if r * view > 0:
-                                color += ks * (r * view)**a * ls
+                color = Color.BLACK
 
-                        pixels[v][u] = color
+                for light in self.lights:
+                    la = light.ambient
+                    ld = light.diffuse
+                    ls = light.specular
+                    l = (light.position - point).normalize()
+
+                    obstructor = self.closest_intersection(
+                        Ray(point, l), exclude=obj)
+
+                    if obstructor is not None:
+                        continue
+
+                    r = (l * n) * 2 * n - l
+                    view = (-vector).normalize()
+
+                    color += ka * la
+                    if l * n > 0:
+                        color += kd * (l * n) * ld
+                    if r * view > 0:
+                        color += ks * (r * view)**a * ls
+
+                pixels[v][u] = color
 
         return pixels
+
+    def closest_intersection(self, ray, exclude = None):
+        intersections = [
+            o.intersection(ray) for o in self.objects if o is not exclude
+        ]
+        intersections = [x for x in intersections if x is not None]
+
+        # miss
+        if not intersections:
+            return None
+
+        # hit
+        return min(intersections, key=lambda x: x['t'])
