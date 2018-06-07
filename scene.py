@@ -30,10 +30,11 @@ class Scene:
                     intersection = obj.intersection(ray)
                     if intersection is not None:
                         t = intersection['t']
+                        normal = obj.normal(intersection['point'])
                         pixels[v][u] = Color(
-                            255 - int((t-18)*255/2),
-                            255 - int((t-18)*255/2),
-                            255 - int((t-18)*255/2)
+                            int((normal.x + 1) * 255 / 2),
+                            int((normal.y + 1) * 255 / 2),
+                            int((normal.z + 1) * 255 / 2)
                         )
 
         return pixels

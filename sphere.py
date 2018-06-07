@@ -43,4 +43,4 @@ class Sphere:
         return {'point': o + d * l, 't': d}
 
     def normal(self, point):
-        pass
+        return (point - self.c).normalize()
