@@ -9,19 +9,60 @@ from color import Color
 from light import Light
 from phong import Phong
 
-camera = Camera(Point.ORIGIN, Vector.J, Vector.K)
-scene = Scene(camera, 600, 400, 90, Color.BLACK)
+camera = Camera(Point.ORIGIN - Vector.K * 10, Vector.J, Vector.K)
+scene = Scene(camera, 800, 600, 70, Color.BLACK)
 
 lights = [
     Light(Point(0, 100, 0), Color.WHITE * 0.1, Color.WHITE, Color.WHITE),
-    Light(Point(-100, 0, 0), Color.WHITE * 0.1, Color.RED, Color(255, 200, 200))
+    Light(Point(-100, 30, -20), Color.WHITE * 0.1, Color.RED, Color(255, 200, 200))
 ]
 
 objects = [
-    Sphere(Point(0, 0, 15), 5,
-           Phong(Color(100, 100, 200), Color(100, 100, 200), Color.WHITE, 20)),
-    Sphere(Point(5, 5, 20), 5,
-           Phong(Color.ORANGE, Color.ORANGE, Color.WHITE, 20)),
+    Sphere(
+        Point(0, -10, 4),
+        8,
+        Phong(
+            Color(100, 100, 150),
+            Color(100, 100, 150),
+            Color.WHITE,
+            50,
+            0.5,
+            reflect_bg=True
+        )
+    ),
+    Sphere(
+        Point(-2, 2, 4),
+        3,
+        Phong(
+            Color(60, 250, 60),
+            Color(60, 250, 60),
+            Color.WHITE,
+            50,
+            0.3
+        )
+    ),
+    Sphere(
+        Point(5, 0, 2),
+        2,
+        Phong(
+            Color(250, 60, 60),
+            Color(250, 60, 60),
+            Color.WHITE,
+            20,
+            0.5
+        )
+    ),
+    Sphere(
+        Point(0, 4, 0),
+        1,
+        Phong(
+            Color.ORANGE,
+            Color.ORANGE,
+            Color.WHITE,
+            30,
+            0.3
+        )
+    )
 ]
 
 for o in objects:
