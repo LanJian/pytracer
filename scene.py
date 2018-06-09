@@ -30,50 +30,54 @@ class Scene:
                           + self.camera.side * (u - (self.width - 1) / 2)
                           + self.camera.up * ((self.height - 1) / 2 - v))
                 ray = Ray(self.camera.position, vector.normalize())
-
-                closest = self.closest_intersection(ray)
-                if not closest:
-                    pixels[v][u] = self.background
-                    continue
-
-                obj = closest['obj']
-                point = closest['point']
-                n = obj.normal(point)
-
-                mat = obj.material
-                ka = mat.ambient
-                kd = mat.diffuse
-                ks = mat.specular
-                a = mat.shininess
-
-                color = Color.BLACK
-
-                for light in self.lights:
-                    la = light.ambient
-                    ld = light.diffuse
-                    ls = light.specular
-                    l = (light.position - point).normalize()
-
-                    obstructor = self.closest_intersection(
-                        Ray(point, l), exclude=obj)
-
-                    if obstructor is not None:
-                        continue
-
-                    r = (l * n) * 2 * n - l
-                    view = (-vector).normalize()
-
-                    color += ka * la
-                    if l * n > 0:
-                        color += kd * (l * n) * ld
-                    if r * view > 0:
-                        color += ks * (r * view)**a * ls
-
-                pixels[v][u] = color
+                pixels[v][u] = self.trace(ray)
 
         return pixels
 
-    def closest_intersection(self, ray, exclude = None):
+    def trace(self, ray, depth=1):
+        if depth == 0:
+            return self.background
+
+        closest = self.closest_intersection(ray)
+        if not closest:
+            return self.background
+
+        obj = closest['obj']
+        point = closest['point']
+        n = obj.normal(point)
+
+        mat = obj.material
+        ka = mat.ambient
+        kd = mat.diffuse
+        ks = mat.specular
+        a = mat.shininess
+
+        local_color = Color.BLACK
+
+        for light in self.lights:
+            la = light.ambient
+            ld = light.diffuse
+            ls = light.specular
+            l = (light.position - point).normalize()
+
+            obstructor = self.closest_intersection(
+                Ray(point, l), exclude=obj)
+
+            if obstructor is not None:
+                continue
+
+            r = (l * n) * 2 * n - l
+            view = (-ray.d).normalize()
+
+            local_color += ka * la
+            if l * n > 0:
+                local_color += kd * (l * n) * ld
+            if r * view > 0:
+                local_color += ks * (r * view)**a * ls
+
+        return color
+
+    def closest_intersection(self, ray, exclude=None):
         intersections = [
             o.intersection(ray) for o in self.objects if o is not exclude
         ]
