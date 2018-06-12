@@ -10,11 +10,12 @@ from light import Light
 from phong import Phong
 
 camera = Camera(Point.ORIGIN - Vector.K * 10, Vector.J, Vector.K)
-scene = Scene(camera, 800, 600, 70, Color.BLACK)
+scene = Scene(camera, 800, 600, 70, Color.WHITE * 0.1)
 
 lights = [
     Light(Point(0, 100, 0), Color.WHITE * 0.1, Color.WHITE, Color.WHITE),
-    Light(Point(-100, 30, -20), Color.WHITE * 0.1, Color.RED, Color(255, 200, 200))
+    Light(Point(-100, 30, -20), Color.WHITE * 0.1,
+          Color.RED, Color(255, 200, 200))
 ]
 
 objects = [
@@ -80,4 +81,3 @@ for u in range(img.size[0]):
         pixels[u, v] = tuple(result[v][u])
 
 img.save('output.png')
-
