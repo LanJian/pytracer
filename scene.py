@@ -56,13 +56,14 @@ class Scene:
         kd = mat.diffuse
         ks = mat.specular
         a = mat.shininess
-        ref = mat.reflectivity
+        ref = mat.reflectance
+        trans = mat.transmittance
 
         vv = (-ray.d).normalize()
         h = (vv * n) * 2 * n - vv
 
+        # local color
         local_color = Color.BLACK
-
         for light in self.lights:
             la = light.ambient
             ld = light.diffuse
@@ -83,13 +84,34 @@ class Scene:
             if r * vv > 0:
                 local_color += ks * (r * vv)**a * ls
 
-        if ref == 0:
+        if ref == 0 and trans == 0:
             return local_color
 
-        miss_color = self.background if mat.reflect_bg else local_color
-        reflected_color = self.trace(
-            Ray(point, h), depth - 1, exclude=obj, miss_color=miss_color)
-        return reflected_color * ref + local_color * (1 - ref)
+        # relected color
+        reflected_color = Color.BLACK
+        if ref > 0:
+            miss_color = self.background if mat.reflect_bg else local_color
+            reflected_color = self.trace(
+                Ray(point, h), depth - 1, exclude=obj, miss_color=miss_color)
+
+        # transmitted color
+        refracted_color = Color.BLACK
+        if trans > 0:
+            epsilon = 0.0001
+            # refract into object
+            refracted_d = ray.d.refract(n, mat.ior)
+            refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
+            # refract out of object
+            out_intersection = obj.intersection(refracted_ray)
+            point = out_intersection['point']
+            n = obj.normal(point)
+            refracted_d = refracted_ray.d.refract(n, mat.ior)
+            refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
+            refracted_color = self.trace(refracted_ray, depth - 1, exclude=obj)
+
+        return reflected_color * ref\
+            + refracted_color * trans\
+            + local_color * (1 - ref - trans)
 
     def closest_intersection(self, ray, exclude=None):
         intersections = [

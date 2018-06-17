@@ -1,3 +1,6 @@
+import math
+
+
 class Ray:
     def __init__(self, position, direction):
         self.p = position

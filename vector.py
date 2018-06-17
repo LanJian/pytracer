@@ -47,6 +47,21 @@ class Vector:
         mag = abs(self)
         return Vector(*[e / mag for e in self.elements])
 
+    def refract(self, n, ior):
+        i = self
+
+        eta = 1 / ior
+        c1 = n * i
+        if c1 < 0:
+            c1 = -c1
+        else:
+            n = -n
+            eta = ior / 1
+
+        c2 = math.sqrt(1 - eta * eta  * (1 - c1 * c1))
+        t = eta * (i  + c1 * n) - n * c2
+        return t.normalize()
+
     def __str__(self):
         return f'V{self.elements}'
 
