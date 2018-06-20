@@ -100,14 +100,15 @@ class Scene:
             epsilon = 0.0001
             # refract into object
             refracted_d = ray.d.refract(n, mat.ior)
-            refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
-            # refract out of object
-            out_intersection = obj.intersection(refracted_ray)
-            point = out_intersection['point']
-            n = obj.normal(point)
-            refracted_d = refracted_ray.d.refract(n, mat.ior)
-            refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
-            refracted_color = self.trace(refracted_ray, depth - 1, exclude=obj)
+            if refracted_d is not None:
+                refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
+                # refract out of object
+                out_intersection = obj.intersection(refracted_ray)
+                point = out_intersection['point']
+                n = obj.normal(point)
+                refracted_d = refracted_ray.d.refract(n, mat.ior)
+                refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
+                refracted_color = self.trace(refracted_ray, depth - 1, exclude=obj)
 
         return reflected_color * ref\
             + refracted_color * trans\

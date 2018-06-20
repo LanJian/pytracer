@@ -12,7 +12,7 @@ from ray import Ray
 
 
 camera = Camera(Point.ORIGIN - Vector.K * 10, Vector.J, Vector.K)
-scene = Scene(camera, 800, 600, 70, Color.WHITE * 0.1)
+scene = Scene(camera, 400, 300, 70, Color.WHITE * 0.1)
 
 lights = [
     Light(Point(0, 100, 0), Color.WHITE * 0.1, Color.WHITE, Color.WHITE),

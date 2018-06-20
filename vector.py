@@ -52,8 +52,13 @@ class Vector:
 
         eta = 1 / ior
         c1 = n * i
-        if c1 < 0:
+        if c1 < 0:  # ray is going from air to denser material
             c1 = -c1
+            # since we are reverse tracing, this represents the ray coming out
+            #   of the denser object, which issubject to total internal
+            #   reflection
+            if ior * math.sqrt(max([0, 1 - c1 * c1])) > 1:
+                return None  # total internal reflection
         else:
             n = -n
             eta = ior / 1
