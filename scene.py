@@ -89,10 +89,11 @@ class Scene:
 
         # relected color
         reflected_color = Color.BLACK
+        reflected_ray = Ray(point, h)
         if ref > 0:
             miss_color = self.background if mat.reflect_bg else local_color
             reflected_color = self.trace(
-                Ray(point, h), depth - 1, exclude=obj, miss_color=miss_color)
+                reflected_ray, depth - 1, exclude=obj, miss_color=miss_color)
 
         # transmitted color
         refracted_color = Color.BLACK
@@ -102,13 +103,7 @@ class Scene:
             refracted_d = ray.d.refract(n, mat.ior)
             if refracted_d is not None:
                 refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
-                # refract out of object
-                out_intersection = obj.intersection(refracted_ray)
-                point = out_intersection['point']
-                n = obj.normal(point)
-                refracted_d = refracted_ray.d.refract(n, mat.ior)
-                refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
-                refracted_color = self.trace(refracted_ray, depth - 1, exclude=obj)
+                refracted_color = self.trace(refracted_ray, depth - 1)
 
         return reflected_color * ref\
             + refracted_color * trans\
