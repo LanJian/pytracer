@@ -49,22 +49,39 @@ class Vector:
 
     def refract(self, n, ior):
         i = self
+        eta1 = 1
+        eta2 = ior
+        eta = eta1 / eta2
+        cos1 = n * i
+        sin2 = eta1 / eta2 * math.sqrt(1 - cos1 * cos1)
+        cos2 = math.sqrt(1 - sin2 * sin2)
 
-        eta = 1 / ior
-        c1 = n * i
-        if c1 < 0:  # ray is going from air to denser material
-            c1 = -c1
+        if cos1 < 0:  # ray is going from air to denser material
+            cos1 = -cos1
         else:
             n = -n
-            eta = ior / 1
+            eta = eta2 / eta1
 
-        k = 1 - eta * eta * (1 - c1 * c1)
+
+        k = 1 - eta * eta * (1 - cos1 * cos1)
         if k < 0:  # total internal reflection
-            return None
+            # transmitted light is 0
+            return {'ft': 0, 't': None}
+
+        fr_parallel = (
+            (eta2 * cos1 - eta1 * cos2)
+            / (eta2 * cos1 + eta1 * cos2)
+        )**2
+        fr_perpendicular = (
+            (eta1 * cos2 - eta2 * cos1)
+            / (eta1 * cos2 + eta2 * cos1)
+        )**2
+
+        fr = (fr_parallel + fr_perpendicular) / 2
 
         c2 = math.sqrt(k)
-        t = eta * (i  + c1 * n) - n * c2
-        return t.normalize()
+        t = eta * (i  + cos1 * n) - n * c2
+        return {'ft': 1 - fr, 't': t.normalize()}
 
     def __str__(self):
         return f'V{self.elements}'

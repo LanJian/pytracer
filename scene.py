@@ -90,21 +90,31 @@ class Scene:
         # relected color
         reflected_color = Color.BLACK
         reflected_ray = Ray(point, h)
-        if ref > 0:
-            miss_color = self.background if mat.reflect_bg else local_color
-            reflected_color = self.trace(
-                reflected_ray, depth - 1, exclude=obj, miss_color=miss_color)
+        miss_color = self.background if mat.reflect_bg else local_color
+        reflected_color = self.trace(
+            reflected_ray, depth - 1, exclude=obj, miss_color=miss_color)
 
         # transmitted color
         refracted_color = Color.BLACK
+        ft = 0
+        fr = 1
         if trans > 0:
             epsilon = 0.0001
             # refract into object
-            refracted_d = ray.d.refract(n, mat.ior)
+            refraction = ray.d.refract(n, mat.ior)
+            refracted_d = refraction['t']
+            # fresnel
+            ft = refraction['ft']
+            fr = 1 - ft
             if refracted_d is not None:
                 refracted_ray = Ray(point + refracted_d * epsilon, refracted_d)
                 refracted_color = self.trace(refracted_ray, depth - 1)
 
+        # adjust reflectance and transmittance with fresnel
+        ref = ref + fr * trans
+        trans = ft * trans
+        # print(point)
+        # print(trans)
         return reflected_color * ref\
             + refracted_color * trans\
             + local_color * (1 - ref - trans)
