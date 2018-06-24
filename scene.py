@@ -113,11 +113,9 @@ class Scene:
         # adjust reflectance and transmittance with fresnel
         ref = ref + fr * trans
         trans = ft * trans
-        # print(point)
-        # print(trans)
         return reflected_color * ref\
             + refracted_color * trans\
-            + local_color * (1 - ref - trans)
+            + local_color * (1 - ref - trans) * fr
 
     def closest_intersection(self, ray, exclude=None):
         intersections = [

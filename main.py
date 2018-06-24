@@ -8,7 +8,6 @@ from sphere import Sphere
 from color import Color
 from light import Light
 from phong import Phong
-from ray import Ray
 from plane import Plane
 
 
